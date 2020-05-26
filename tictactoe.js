@@ -14,9 +14,9 @@ function checkIfMatrixIsFilled(gameMatrix) {
 
 function initialize() {
   var gameMatrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+    [00, 01, 02],
+    [10, 11, 12],
+    [20, 21, 22]
   ];
   return gameMatrix;
 }
@@ -24,30 +24,35 @@ function initialize() {
 let elements = document.getElementsByClassName("grid-item");
 let gameMatrix = initialize();
 var handleMatrixColumnClick = function() {
+  let row = this.getAttribute("row");
+  let col = this.getAttribute("col");
+  // Already occupied
+  if(gameMatrix[row][col] === "X" || gameMatrix[row][col] === "Y") {
+    return;
+  }
   if(previousTurn == "X") {
     previousTurn = "Y";
     currentTurn = "X";
- } else {
-   previousTurn = "X";
-   currentTurn = "Y"
- }
-  let row = this.getAttribute("row");
-  let col = this.getAttribute("col");
-    this.innerText = currentTurn;
-    gameMatrix[row][col]= currentTurn;
-    let over = checkForCondition(gameMatrix);
-    if(over) {
-      alert("Won Player" + currentTurn);
+  } else {
+    previousTurn = "X";
+    currentTurn = "Y"
+  }
+  this.innerText = currentTurn;
+  gameMatrix[row][col]= currentTurn;
+  let over = checkForCondition(gameMatrix);
+  if(over) {
+    alert("Won Player" + currentTurn);
+    initialize();
+    previousTurn = "X";
+  } else {
+    let filled = checkIfMatrixIsFilled(gameMatrix);
+    console.log("filled",filled)
+    if(filled) {
+      alert("game over");
       initialize();
       previousTurn = "X";
-    } else {
-      let filled = checkIfMatrixIsFilled(gameMatrix);
-      if(filled) {
-        alert("game over");
-        initialize();
-        previousTurn = "X";
-      }
     }
+  }
 };
 
 function checkForCondition(gameMatrix) {
